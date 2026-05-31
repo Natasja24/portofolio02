@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual Assistant — Bynatasjanova</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-pale: #F5E6C0;
+    --dark: #0D0D0D;
+    --dark-2: #161616;
+    --dark-3: #1F1F1F;
+    --dark-4: #2A2A2A;
+    --muted: #7A7A7A;
+    --text: #E8E2D5;
+    --text-dim: #A09890;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── CURSOR ── */
+  body { cursor: none; }
+  #cursor {
+    position: fixed; width: 8px; height: 8px;
+    background: var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, opacity 0.3s;
+  }
+  #cursor-ring {
+    position: fixed; width: 32px; height: 32px;
+    border: 1px solid var(--gold); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.3s;
+    opacity: 0.5;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.5rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid transparent;
+    transition: background 0.4s, border-color 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(13,13,13,0.92);
+    backdrop-filter: blur(12px);
+    border-color: rgba(201,168,76,0.15);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 400; letter-spacing: 0.08em;
+    color: var(--gold-light); text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--text-dim); text-decoration: none;
+    font-size: 0.75rem; letter-spacing: 0.18em; text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold-light); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; text-align: center; padding: 6rem 2rem 4rem;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 40%, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-lines {
+    position: absolute; inset: 0; pointer-events: none;
+    overflow: hidden;
+  }
+  .hero-lines::before, .hero-lines::after {
+    content: '';
+    position: absolute;
+    border: 1px solid rgba(201,168,76,0.08);
+  }
+  .hero-lines::before {
+    width: 600px; height: 600px; border-radius: 50%;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+  }
+  .hero-lines::after {
+    width: 900px; height: 900px; border-radius: 50%;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+  }
+
+  .hero-eyebrow {
+    font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.5rem;
+    opacity: 0; animation: fadeUp 1s 0.3s forwards;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 300; line-height: 1.05;
+    letter-spacing: -0.01em;
+    opacity: 0; animation: fadeUp 1s 0.5s forwards;
+  }
+  .hero h1 em {
+    font-style: italic; color: var(--gold-light);
+    display: block;
+  }
+  .hero-sub {
+    max-width: 500px; margin: 2rem auto 0;
+    font-size: 0.9rem; line-height: 1.8; color: var(--text-dim);
+    opacity: 0; animation: fadeUp 1s 0.7s forwards;
+  }
+  .hero-cta {
+    margin-top: 3rem;
+    opacity: 0; animation: fadeUp 1s 0.9s forwards;
+  }
+  .btn-gold {
+    display: inline-block;
+    padding: 0.9rem 2.5rem;
+    border: 1px solid var(--gold);
+    color: var(--gold-light);
+    text-decoration: none; font-size: 0.75rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    transition: background 0.3s, color 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .btn-gold::before {
+    content: ''; position: absolute; inset: 0;
+    background: var(--gold); transform: scaleX(0); transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .btn-gold:hover::before { transform: scaleX(1); }
+  .btn-gold span { position: relative; z-index: 1; }
+  .btn-gold:hover span { color: var(--dark); }
+
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    opacity: 0; animation: fadeUp 1s 1.2s forwards;
+  }
+  .scroll-hint span {
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted);
+  }
+  .scroll-line {
+    width: 1px; height: 50px; background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+
+  /* ── DIVIDER ── */
+  .gold-divider {
+    display: flex; align-items: center; gap: 1.5rem;
+    margin: 0 auto; max-width: 200px;
+  }
+  .gold-divider::before, .gold-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--gold);
+    opacity: 0.4;
+  }
+  .gold-divider-diamond {
+    width: 6px; height: 6px;
+    background: var(--gold); transform: rotate(45deg);
+  }
+
+  /* ── SECTION BASE ── */
+  section { padding: 7rem 2rem; }
+  .container { max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 300; line-height: 1.1;
+  }
+  .section-title em { font-style: italic; color: var(--gold-light); }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6rem;
+    align-items: center; margin-top: 5rem;
+  }
+  .about-portrait {
+    position: relative; aspect-ratio: 3/4;
+    overflow: hidden;
+  }
+  .about-portrait-inner {
+    width: 100%; height: 100%;
+    background: var(--dark-3);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .portrait-initials {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 5rem; font-weight: 300; color: rgba(201,168,76,0.3);
+    letter-spacing: 0.2em;
+  }
+  .about-portrait::before {
+    content: ''; position: absolute;
+    inset: 0; border: 1px solid rgba(201,168,76,0.2);
+    transform: translate(12px, 12px); z-index: -1;
+  }
+  .about-portrait::after {
+    content: ''; position: absolute;
+    inset: 0; border: 1px solid rgba(201,168,76,0.1);
+    transform: translate(-8px, -8px); z-index: -1;
+  }
+  .about-text p {
+    font-size: 0.95rem; line-height: 1.9; color: var(--text-dim); margin-bottom: 1.5rem;
+  }
+  .about-text .quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-style: italic;
+    color: var(--text); line-height: 1.4; margin: 2rem 0;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--gold);
+  }
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2.5rem;
+  }
+  .stat-item { padding: 1.2rem 0; border-top: 1px solid rgba(201,168,76,0.2); }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem; font-weight: 300; color: var(--gold-light);
+    line-height: 1;
+  }
+  .stat-label { font-size: 0.72rem; color: var(--text-dim); letter-spacing: 0.1em; margin-top: 0.3rem; }
+
+  /* ── SERVICES ── */
+  .services { background: var(--dark-2); }
+  .services-header { text-align: center; margin-bottom: 5rem; }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.12);
+  }
+  .service-card {
+    background: var(--dark-2); padding: 3rem 2.5rem;
+    transition: background 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .service-card::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: scaleX(0); transition: transform 0.4s;
+  }
+  .service-card:hover { background: var(--dark-3); }
+  .service-card:hover::after { transform: scaleX(1); }
+  .service-icon {
+    width: 40px; height: 40px; margin-bottom: 2rem;
+    color: var(--gold); opacity: 0.8;
+  }
+  .service-num {
+    position: absolute; top: 2rem; right: 2.5rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem; font-weight: 300;
+    color: rgba(201,168,76,0.06); line-height: 1;
+  }
+  .service-card h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400; margin-bottom: 1rem;
+    color: var(--text);
+  }
+  .service-card p {
+    font-size: 0.85rem; line-height: 1.8; color: var(--text-dim);
+  }
+  .service-coming {
+    display: inline-block; margin-top: 1rem;
+    padding: 0.3rem 0.8rem;
+    border: 1px solid rgba(201,168,76,0.3);
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--gold); opacity: 0.7;
+  }
+
+  /* ── PROCESS ── */
+  .process-steps {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0;
+    margin-top: 5rem; position: relative;
+  }
+  .process-steps::before {
+    content: ''; position: absolute;
+    top: 1.25rem; left: 12.5%; right: 12.5%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), var(--gold), transparent);
+    opacity: 0.3;
+  }
+  .process-step { text-align: center; padding: 0 1.5rem; }
+  .step-dot {
+    width: 2.5rem; height: 2.5rem; border-radius: 50%;
+    border: 1px solid var(--gold); background: var(--dark);
+    margin: 0 auto 2rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .step-dot-inner {
+    width: 8px; height: 8px; background: var(--gold); border-radius: 50%;
+  }
+  .process-step h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem; font-weight: 400; margin-bottom: 0.8rem;
+  }
+  .process-step p { font-size: 0.8rem; line-height: 1.7; color: var(--text-dim); }
+
+  /* ── CONTACT ── */
+  .contact { background: var(--dark-2); text-align: center; }
+  .contact-inner { max-width: 600px; margin: 0 auto; }
+  .contact-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 300; line-height: 1.1;
+    margin: 2rem 0;
+  }
+  .contact-title em { font-style: italic; color: var(--gold-light); }
+  .contact-sub { font-size: 0.9rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 3rem; }
+  .contact-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+  .contact-link {
+    color: var(--text-dim); text-decoration: none;
+    font-size: 0.75rem; letter-spacing: 0.12em;
+    transition: color 0.3s; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .contact-link:hover { color: var(--gold-light); }
+  .contact-link::before { content: '◆'; font-size: 0.4rem; color: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid rgba(201,168,76,0.12);
+    padding: 2.5rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; color: var(--gold-light);
+  }
+  .footer-copy { font-size: 0.72rem; color: var(--muted); }
+  .footer-back {
+    font-size: 0.72rem; letter-spacing: 0.12em; color: var(--text-dim);
+    text-decoration: none; display: flex; align-items: center; gap: 0.5rem;
+    transition: color 0.3s;
+  }
+  .footer-back:hover { color: var(--gold); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.4; } 50% { opacity: 1; }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ── MOBILE ── */
+  @media (max-width: 900px) {
+    nav { padding: 1.5rem 2rem; }
+    .nav-links { gap: 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .services-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .process-steps::before { display: none; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; padding: 2rem; }
+  }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .process-steps { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="#">Bynatasjanova</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="#about">Over mij</a></li>
+    <li><a href="#diensten">Diensten</a></li>
+    <li><a href="#werkwijze">Werkwijze</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <p class="hero-eyebrow">Virtual Assistant Services</p>
+  <h1>
+    Meer ruimte<br>voor wat echt
+    <em>telt</em>
+  </h1>
+  <p class="hero-sub">
+    Professionele ondersteuning die jouw agenda ontlast, 
+    je administratie stroomlijnt en je bedrijf laat ademen.
+  </p>
+  <div class="hero-cta">
+    <a href="#contact" class="btn-gold"><span>Plan een kennismaking</span></a>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <p class="section-label reveal">Over de VA</p>
+    <h2 class="section-title reveal reveal-delay-1">
+      Jouw onzichtbare<br><em>rechterhand</em>
+    </h2>
+    <div class="about-grid">
+      <div class="about-portrait reveal">
+        <div class="about-portrait-inner">
+          <span class="portrait-initials">BT</span>
+        </div>
+      </div>
+      <div class="about-text">
+        <blockquote class="quote reveal">
+          "Ik geloof dat ondernemers kunnen vliegen — 
+          als ze de juiste ondersteuning hebben."
+        </blockquote>
+        <p class="reveal reveal-delay-1">
+          Als Virtual Assistant neem ik de dagelijkse taken over die jouw kostbare tijd opslokken. 
+          Van volle inboxen tot onoverzichtelijke agenda's — ik zorg dat het loopt, 
+          zodat jij je focust op waar je écht goed in bent.
+        </p>
+        <p class="reveal reveal-delay-2">
+          Met oog voor detail, discretie en een professionele aanpak zorg ik ervoor 
+          dat je bedrijf soepel draait, ook als jij dat niet doet.
+        </p>
+        <div class="about-stats reveal reveal-delay-3">
+          <div class="stat-item">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Vertrouwelijk & discreet</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">Flex</div>
+            <div class="stat-label">Op uren of projectbasis</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">1:1</div>
+            <div class="stat-label">Persoonlijke begeleiding</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">Fast</div>
+            <div class="stat-label">Snelle reactietijd</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="diensten" class="services">
+  <div class="container">
+    <div class="services-header">
+      <p class="section-label reveal">Wat ik doe</p>
+      <h2 class="section-title reveal reveal-delay-1">
+        Mijn <em>diensten</em>
+      </h2>
+      <div class="gold-divider" style="margin-top:2rem;">
+        <div class="gold-divider-diamond"></div>
+      </div>
+    </div>
+    <div class="services-grid reveal">
+      <!-- Dienst 1 -->
+      <div class="service-card">
+        <span class="service-num">01</span>
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <rect x="2" y="4" width="20" height="16" rx="2"/>
+          <path d="M2 8h20M6 4v4M18 4v4"/>
+        </svg>
+        <h3>Agenda & E-mail beheer</h3>
+        <p>
+          Nooit meer een vergadering missen of verzanden in een volle inbox. 
+          Ik beheer je agenda, filter je e-mails en zorg dat jij alleen ziet 
+          wat echt jouw aandacht vraagt.
+        </p>
+      </div>
+      <!-- Dienst 2 -->
+      <div class="service-card">
+        <span class="service-num">02</span>
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+          <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+          <rect x="9" y="3" width="6" height="4" rx="1"/>
+          <path d="M9 12h6M9 16h4"/>
+        </svg>
+        <h3>Administratie & Boekhouding</h3>
+        <p>
+          Van facturen opmaken tot bonnetjes bijhouden — ik houd je 
+          administratie strak en overzichtelijk zodat je altijd weet 
+          waar je staat, zonder er zelf in te verzuipen.
+        </p>
+      </div>
+      <!-- Dienst 3 – Coming Soon -->
+      <div class="service-card">
+        <span class="service-num">03</span>
+        <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="opacity:0.4">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 8v4l3 3"/>
+        </svg>
+        <h3 style="opacity:0.5">Meer komt eraan</h3>
+        <p style="opacity:0.45">
+          Er worden nieuwe diensten toegevoegd. Houd deze pagina in 
+          de gaten voor uitbreiding van het aanbod.
+        </p>
+        <span class="service-coming">Binnenkort beschikbaar</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="werkwijze">
+  <div class="container">
+    <div style="text-align:center">
+      <p class="section-label reveal">Hoe we samenwerken</p>
+      <h2 class="section-title reveal reveal-delay-1">
+        De <em>werkwijze</em>
+      </h2>
+    </div>
+    <div class="process-steps">
+      <div class="process-step reveal">
+        <div class="step-dot"><div class="step-dot-inner"></div></div>
+        <h4>Kennismaking</h4>
+        <p>We bespreken jouw wensen, werkstijl en wat je écht nodig hebt in een vrijblijvend gesprek.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-1">
+        <div class="step-dot"><div class="step-dot-inner"></div></div>
+        <h4>Afstemming</h4>
+        <p>We stellen heldere afspraken op over taken, beschikbaarheid en communicatie.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-2">
+        <div class="step-dot"><div class="step-dot-inner"></div></div>
+        <h4>Aan de slag</h4>
+        <p>Ik neem de taken over, werk zelfstandig en houd je op de hoogte waar nodig.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-3">
+        <div class="step-dot"><div class="step-dot-inner"></div></div>
+        <h4>Groei samen</h4>
+        <p>We evalueren regelmatig en schalen op wanneer jij groeit. Duurzaam en flexibel.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="gold-divider reveal" style="margin-bottom:2.5rem">
+        <div class="gold-divider-diamond"></div>
+      </div>
+      <p class="section-label reveal">Samenwerken?</p>
+      <h2 class="contact-title reveal reveal-delay-1">
+        Laten we kennismaken<em>.</em>
+      </h2>
+      <p class="contact-sub reveal reveal-delay-2">
+        Benieuwd wat ik voor jou kan betekenen? Stuur een bericht 
+        en ik reageer binnen één werkdag.
+      </p>
+      <div class="contact-links reveal reveal-delay-3">
+        <a href="mailto:info@bynatasjanova.nl" class="contact-link">info@bynatasjanova.nl</a>
+        <a href="https://bynatasjanova.nl" class="contact-link">bynatasjanova.nl</a>
+        <a href="https://www.linkedin.com/in/bynatasjanova" class="contact-link">LinkedIn</a>
+      </div>
+      <div style="margin-top:3rem" class="reveal">
+        <a href="mailto:info@bynatasjanova.nl" class="btn-gold"><span>Stuur een bericht ↗</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-brand">Byna Tasjanova</span>
+  <span class="footer-copy">© 2025 Virtual Assistant Services</span>
+  <a href="https://bynatasjanova.nl" class="footer-back">← Terug naar hoofdsite</a>
+</footer>
+
+<script>
+  // Custom cursor
+  const cur = document.getElementById('cursor');
+  const ring = document.getElementById('cursor-ring');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function moveCursor() {
+    cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+    rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(moveCursor);
+  })();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cur.style.transform = 'translate(-50%,-50%) scale(2.5)'; });
+    el.addEventListener('mouseleave', () => { cur.style.transform = 'translate(-50%,-50%) scale(1)'; });
+  });
+
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

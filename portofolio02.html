@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Natasja Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fdf8f5;
+  --white:#ffffff;
+  --text:#2d2320;
+  --muted:#7a6e6b;
+
+  --pink:#f4c6d4;
+  --pink-dark:#d4708e;
+  --pink-deep:#b85475;
+  --lila:#d9c8f0;
+  --lila-dark:#8b68c4;
+  --mint:#c4e8dc;
+  --mint-dark:#4aab8a;
+  --peach:#fad5b8;
+  --peach-dark:#e08048;
+  --cream:#fef5ee;
+
+  --radius:24px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth;}
+
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;}
+
+/* DECORATIVE BLOBS */
+body::before{
+  content:'';
+  position:fixed;
+  top:-120px;right:-120px;
+  width:500px;height:500px;
+  border-radius:50%;
+  background:radial-gradient(circle,#f4c6d440,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';
+  position:fixed;
+  bottom:-150px;left:-100px;
+  width:450px;height:450px;
+  border-radius:50%;
+  background:radial-gradient(circle,#d9c8f040,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+/* HEADER */
+header{
+  position:fixed;width:100%;top:0;z-index:1000;
+  background:rgba(253,248,245,0.85);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(244,198,212,0.3);
+}
+.navbar{max-width:1200px;margin:auto;padding:1.1rem 2rem;display:flex;justify-content:space-between;align-items:center;}
+.logo{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--pink-deep);letter-spacing:-0.5px;}
+.nav-links{display:flex;gap:1.8rem;list-style:none;}
+.nav-links a{text-decoration:none;color:var(--muted);font-weight:400;font-size:0.9rem;transition:color 0.2s;}
+.nav-links a:hover{color:var(--pink-deep);}
+.dark-btn{
+  border:1.5px solid var(--pink);background:transparent;
+  color:var(--pink-deep);padding:0.5rem 1rem;border-radius:100px;
+  cursor:pointer;font-size:0.9rem;transition:0.2s;
+}
+.dark-btn:hover{background:var(--pink);color:white;}
+
+/* HERO */
+.hero{
+  min-height:100vh;padding:9rem 8% 6rem;
+  display:grid;grid-template-columns:1.1fr 1fr;
+  gap:4rem;align-items:center;position:relative;z-index:1;
+}
+.hero-label{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:var(--pink);color:var(--pink-deep);
+  padding:0.5rem 1.1rem;border-radius:100px;
+  font-size:0.85rem;font-weight:500;margin-bottom:1.8rem;
+}
+.hero-text h1{
+  font-family:'DM Serif Display',serif;
+  font-size:4rem;line-height:1.1;margin-bottom:1.4rem;
+  color:var(--text);
+}
+.hero-text h1 em{font-style:italic;color:var(--pink-deep);}
+.hero-text p{color:var(--muted);line-height:1.85;max-width:520px;margin-bottom:2.2rem;font-size:0.95rem;}
+
+.btn{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  padding:0.85rem 1.8rem;border-radius:100px;
+  background:var(--pink-deep);color:white;
+  text-decoration:none;font-size:0.9rem;font-weight:500;
+  transition:0.25s;
+}
+.btn:hover{background:var(--pink-dark);transform:translateY(-2px);}
+.btn-outline{
+  background:transparent;color:var(--pink-deep);
+  border:1.5px solid var(--pink);margin-left:0.8rem;
+}
+.btn-outline:hover{background:var(--pink);}
+
+.hero-visual{position:relative;}
+.hero-card{
+  background:var(--white);border-radius:var(--radius);
+  padding:2.2rem;border:1px solid rgba(244,198,212,0.4);
+}
+.hero-card-header{
+  display:flex;align-items:center;gap:0.8rem;
+  margin-bottom:1.5rem;
+}
+.avatar{
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--pink),var(--lila));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Serif Display',serif;font-size:1.3rem;color:white;
+}
+.hero-card-header-text h3{font-size:1rem;font-weight:500;margin-bottom:0.2rem;}
+.hero-card-header-text p{font-size:0.82rem;color:var(--muted);}
+
+.service-pill{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.65rem 1rem;border-radius:12px;
+  font-size:0.85rem;font-weight:500;margin:0.3rem 0.3rem 0 0;
+}
+.pill-pink{background:var(--pink);color:var(--pink-deep);}
+.pill-lila{background:var(--lila);color:var(--lila-dark);}
+.pill-mint{background:var(--mint);color:var(--mint-dark);}
+.pill-peach{background:var(--peach);color:var(--peach-dark);}
+
+.floating-badge{
+  position:absolute;background:var(--white);
+  border:1px solid rgba(217,200,240,0.5);
+  border-radius:14px;padding:0.6rem 1rem;
+  font-size:0.82rem;font-weight:500;color:var(--text);
+  display:flex;align-items:center;gap:0.4rem;
+}
+.badge-dot{width:8px;height:8px;border-radius:50%;}
+.badge1{top:-20px;right:-10px;}
+.badge2{bottom:-15px;left:-15px;}
+
+/* SECTIONS */
+section{padding:6rem 8%;position:relative;z-index:1;}
+.section-tag{
+  display:inline-block;background:var(--cream);color:var(--muted);
+  padding:0.35rem 0.9rem;border-radius:100px;font-size:0.8rem;
+  margin-bottom:1rem;border:1px solid rgba(244,198,212,0.3);
+}
+.section-title h2{font-family:'DM Serif Display',serif;font-size:2.8rem;color:var(--text);margin-bottom:0.8rem;}
+.section-title p{color:var(--muted);font-size:0.95rem;}
+.section-title{margin-bottom:3.5rem;}
+
+/* SERVICES */
+#services{background:var(--cream);}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;}
+.service-card{
+  background:var(--white);padding:2rem;
+  border-radius:var(--radius);
+  border:1px solid rgba(244,198,212,0.3);
+  transition:transform 0.25s,border-color 0.25s;
+}
+.service-card:hover{transform:translateY(-6px);border-color:var(--pink);}
+.service-icon{
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;margin-bottom:1.2rem;
+}
+.icon-pink{background:var(--pink);}
+.icon-lila{background:var(--lila);}
+.icon-mint{background:var(--mint);}
+.service-card h3{font-size:1.05rem;font-weight:500;margin-bottom:0.8rem;color:var(--text);}
+.service-card p{color:var(--muted);line-height:1.8;font-size:0.9rem;}
+
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem;}
+.project-card{
+  background:var(--white);border-radius:var(--radius);
+  overflow:hidden;border:1px solid rgba(244,198,212,0.3);
+  transition:transform 0.25s,border-color 0.25s;
+}
+.project-card:hover{transform:translateY(-6px);border-color:var(--lila);}
+.project-img{width:100%;height:220px;object-fit:cover;}
+.project-content{padding:1.5rem;}
+.project-tag{
+  display:inline-block;font-size:0.75rem;font-weight:500;
+  padding:0.3rem 0.7rem;border-radius:100px;margin-bottom:0.8rem;
+}
+.tag-pink{background:var(--pink);color:var(--pink-deep);}
+.tag-lila{background:var(--lila);color:var(--lila-dark);}
+.tag-mint{background:var(--mint);color:var(--mint-dark);}
+.tag-peach{background:var(--peach);color:var(--peach-dark);}
+.project-content h3{font-size:1rem;font-weight:500;margin-bottom:0.6rem;}
+.project-content p{color:var(--muted);font-size:0.88rem;line-height:1.75;margin-bottom:1.2rem;}
+.btn-sm{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  padding:0.55rem 1.1rem;border-radius:100px;
+  background:var(--pink-deep);color:white;
+  text-decoration:none;font-size:0.82rem;font-weight:500;
+  transition:0.2s;
+}
+.btn-sm:hover{background:var(--pink-dark);}
+
+/* SKILLS */
+#skills{background:var(--cream);}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;}
+.skill-card{
+  background:var(--white);padding:1.5rem;border-radius:20px;
+  border:1px solid rgba(244,198,212,0.3);text-align:center;
+  transition:transform 0.2s;
+}
+.skill-card:hover{transform:translateY(-4px);}
+.skill-emoji{font-size:1.8rem;margin-bottom:0.8rem;}
+.skill-card h3{font-size:0.92rem;font-weight:500;color:var(--text);margin-bottom:0.4rem;}
+.skill-card p{font-size:0.82rem;color:var(--muted);}
+
+/* ABOUT */
+.about-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;}
+.about-photo{
+  border-radius:var(--radius);overflow:hidden;
+  border:3px solid var(--pink);
+}
+.about-photo img{width:100%;height:420px;object-fit:cover;display:block;}
+.about-content{display:flex;flex-direction:column;gap:1.5rem;}
+.about-card{
+  background:var(--white);padding:1.8rem;border-radius:var(--radius);
+  border:1px solid rgba(244,198,212,0.3);
+}
+.about-card h3{font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:0.8rem;color:var(--text);}
+.about-card p{color:var(--muted);line-height:1.85;font-size:0.9rem;}
+.stat-row{display:flex;gap:1rem;margin-top:1rem;}
+.stat{
+  flex:1;background:var(--cream);padding:1rem;
+  border-radius:14px;text-align:center;
+}
+.stat-num{font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--pink-deep);}
+.stat-label{font-size:0.78rem;color:var(--muted);margin-top:0.2rem;}
+
+/* CONTACT */
+#contact{background:var(--cream);}
+.contact-wrapper{
+  max-width:680px;margin:0 auto;
+  background:var(--white);border-radius:var(--radius);
+  padding:3rem;border:1px solid rgba(244,198,212,0.4);
+  text-align:center;
+}
+.contact-wrapper h3{font-family:'DM Serif Display',serif;font-size:2rem;margin-bottom:0.8rem;}
+.contact-wrapper p{color:var(--muted);margin-bottom:2rem;font-size:0.95rem;}
+.contact-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.contact-link{
+  display:flex;align-items:center;gap:0.6rem;
+  padding:0.8rem 1.5rem;border-radius:100px;
+  border:1.5px solid rgba(244,198,212,0.6);
+  text-decoration:none;color:var(--text);font-size:0.9rem;
+  transition:0.2s;background:var(--white);
+}
+.contact-link:hover{border-color:var(--pink-deep);color:var(--pink-deep);}
+
+/* FOOTER */
+footer{
+  text-align:center;padding:2.5rem;color:var(--muted);
+  font-size:0.85rem;border-top:1px solid rgba(244,198,212,0.3);
+}
+footer span{color:var(--pink-deep);}
+
+/* DARK MODE */
+body.dark{
+  --bg:#1a1318;--white:#241c20;--text:#f0eae8;--muted:#a8978f;
+  --cream:#1e1620;
+}
+body.dark::before{background:radial-gradient(circle,#f4c6d420,transparent 70%);}
+body.dark::after{background:radial-gradient(circle,#d9c8f020,transparent 70%);}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;text-align:center;}
+  .hero-text p{max-width:100%;}
+  .hero-text .btn-outline{margin:0.8rem 0 0 0;}
+  .about-wrapper{grid-template-columns:1fr;}
+  .about-photo img{height:300px;}
+}
+@media(max-width:700px){
+  .nav-links{display:none;}
+  .hero{padding-top:7rem;}
+  .hero-text h1{font-size:2.8rem;}
+  section{padding:5rem 6%;}
+  .section-title h2{font-size:2.2rem;}
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.hero-text{animation:fadeUp 0.7s ease both;}
+.hero-visual{animation:fadeUp 0.7s 0.15s ease both;}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="logo">Natasja</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#services">Wat ik doe</a></li>
+      <li><a href="#projects">Projecten</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="index.html">bynatasjanova</a></li>
+      <li><a href="#about">Over mij</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <button class="dark-btn" id="darkBtn">🌙 Dark</button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-text">
+    <div class="hero-label">✨ Open voor nieuwe projecten</div>
+    <h1>Hi, ik ben<br><em>Natasja</em></h1>
+    <p>Welkom! Mijn naam is Natasja Schut, ik ben 31 jaar en een gepassioneerde professional met een brede interesse in ontwikkeling, design en virtuele ondersteuning. Dit portfolio is mijn eerste volledig zelfgecreëerde werk — een reflectie van wie ik ben en waar ik voor sta.</p>
+    <div>
+      <a href="#projects" class="btn">Bekijk mijn werk →</a>
+      <a href="#contact" class="btn btn-outline">Contact</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-card" style="position:relative;">
+      <div class="hero-card-header">
+        <div class="avatar">N</div>
+        <div class="hero-card-header-text">
+          <h3>Natasja Schut</h3>
+          <p>Webdesigner & Creative Support</p>
+        </div>
+      </div>
+      <div>
+        <span class="service-pill pill-pink">💻 Webdesign</span>
+        <span class="service-pill pill-lila">📅 Virtual Assistant</span>
+        <span class="service-pill pill-mint">📸 Fotografie</span>
+        <span class="service-pill pill-peach">🎨 Design</span>
+      </div>
+      <div class="floating-badge badge1">
+        <div class="badge-dot" style="background:var(--mint-dark);"></div>
+        Beschikbaar voor werk
+      </div>
+      <div class="floating-badge badge2">
+        <div class="badge-dot" style="background:var(--lila-dark);"></div>
+        Beverwijk, Nederland
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-title">
+    <div class="section-tag">Wat ik doe</div>
+    <h2>Mijn diensten</h2>
+    <p>Een combinatie van creativiteit, ondersteuning en ontwikkeling.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon icon-pink">💻</div>
+      <h3>Webdesign</h3>
+      <p>Ik ontwikkel moderne websites en portfolio's met HTML, CSS en JavaScript. Professioneel, overzichtelijk en gebruiksvriendelijk — iets wat ik echt uren mee bezig kan zijn en mijn creativiteit in kwijt kan.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon icon-lila">📅</div>
+      <h3>Virtual Assistant</h3>
+      <p>Efficiënt, flexibel en oplossingsgericht werken. Ik ondersteun bij planning, structuur en dagelijkse werkzaamheden via Notion of Google Agenda en zoek altijd naar manieren om processen te verbeteren.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon icon-mint">🎨</div>
+      <h3>Content & Design</h3>
+      <p>Creatief werken aan magazines, fotografie, visuals en designs. Met ervaring in Adobe XD en content creatie ben ik altijd bezig om nieuwe dingen te leren en mezelf te ontwikkelen.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-title">
+    <div class="section-tag">Werk</div>
+    <h2>Mijn projecten</h2>
+    <p>Een selectie van projecten en creatief werk.</p>
+  </div>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <img src="logo.png" alt="bynatasja" class="project-img">
+      <div class="project-content">
+        <span class="project-tag tag-pink">WordPress</span>
+        <h3>Website bynatasja</h3>
+        <p>Mijn hoofdwebsite waar ik mijn missie en visie deel, diensten aanbied en waar je contact kunt opnemen. Gemaakt in WordPress met veel plezier.</p>
+        <a href="https://bynatasja.com" target="_blank" class="btn-sm">Live site →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="logobynatasjanova.png" alt="Bynatasjanova" class="project-img">
+      <div class="project-content">
+        <span class="project-tag tag-lila">HTML & CSS</span>
+        <h3>Bynatasjanova</h3>
+        <p>Een platform waar ik mijn diensten aanbied en mijn visie deel. Gebouwd met HTML en CSS — een project waar ik erg trots op ben.</p>
+        <a href="https://www.bynatasjanova.com" target="_blank" class="btn-sm">Live site →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="magazine.pdf" alt="Magazine" class="project-img" onerror="this.style.background='var(--peach)';this.style.display='block';">
+      <div class="project-content">
+        <span class="project-tag tag-peach">Adobe XD</span>
+        <h3>Magazine</h3>
+        <p>Als test om uit te proberen wat ik allemaal kan — later ook een magazine gemaakt voor mijn ouders. Ze waren erg blij met het resultaat!</p>
+        <a href="Project 01.pdf" download class="btn-sm">Download PDF →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="Schermafbeelding 2026-05-12 om 23.00.35.png" alt="Bouwbedrijf Schepers" class="project-img">
+      <div class="project-content">
+        <span class="project-tag tag-mint">Demo project</span>
+        <h3>Bouwbedrijf Schepers</h3>
+        <p>Een conceptwebsite voor vrienden om hun passie en werk online zichtbaar te maken. Creatieve concepten omzetten naar een sterke digitale uitstraling.</p>
+        <a href="https://natasja24.github.io/Demoaannemersbedrijf-schepers/" target="_blank" class="btn-sm">Demo bekijken →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="foto surf Normaal.jpeg" alt="Septa Surf School" class="project-img">
+      <div class="project-content">
+        <span class="project-tag tag-lila">HTML & CSS</span>
+        <h3>Septa Surf School — Bali</h3>
+        <p>Een website voor een surf school in Bali. Bijna klaar en gemaakt met veel plezier in HTML en CSS.</p>
+        <a href="https://natasja24.github.io/Septa-Surf-School/" target="_blank" class="btn-sm">Demo bekijken →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="bruiloft.jpeg" alt="Wedding uitnodiging" class="project-img">
+      <div class="project-content">
+        <span class="project-tag tag-pink">HTML & CSS</span>
+        <h3>Wedding uitnodiging website</h3>
+        <p>Mijn creativiteit kwijt in een prachtige website voor een bruiloftsuitnodiging. Strak en romantisch ontwerp.</p>
+        <a href="https://natasja24.github.io/weddingavondfeestuitnodiging-/" target="_blank" class="btn-sm">Bekijken →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="Amw marine 02  Normaal.jpeg" alt="Producten fotografie" class="project-img">
+      <div class="project-content">
+        <span class="project-tag tag-peach">Fotografie</span>
+        <h3>Productfotografie AMW Marine</h3>
+        <p>Foto's gemaakt van producten voor de webshop van AMW Marine. Commerciële productfotografie voor een professionele webshop.</p>
+        <a href="https://amw.nl" target="_blank" class="btn-sm">Webshop bekijken →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="friesland.jpg" alt="Fotografie Friesland" class="project-img">
+      <div class="project-content">
+        <span class="project-tag tag-mint">Fotografie</span>
+        <h3>Natuur­fotografie — Friesland</h3>
+        <p>Ik vind het super leuk om verschillende soorten foto's te maken. Deze prachtige foto is gemaakt in Friesland.</p>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="vogels.jpg" alt="Fotografie Zuid-Afrika" class="project-img">
+      <div class="project-content">
+        <span class="project-tag tag-lila">Fotografie</span>
+        <h3>Wildlife — Zuid-Afrika</h3>
+        <p>Een vliegende vogel op precies het goede moment vastgelegd. "Omg, ik heb het perfecte moment vastgelegd!" — gemaakt in Zuid-Afrika.</p>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="natasjaschut Normaal.jpeg" alt="Fotobewerking" class="project-img">
+      <div class="project-content">
+        <span class="project-tag tag-pink">Fotobewerking</span>
+        <h3>Creatieve fotobewerking</h3>
+        <p>Meer dan standaardfotografie — ik bewerk foto's creatief. Op deze foto zie je hoe ik mezelf in een andere omgeving heb geplaatst.</p>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="apen.jpg" alt="Fotografie Spanje" class="project-img">
+      <div class="project-content">
+        <span class="project-tag tag-peach">Fotografie</span>
+        <h3>Dierenfotografie — Spanje</h3>
+        <p>Dierenfotografie is iets wat ik ook enorm leuk vind. Deze foto is gemaakt tijdens een bezoek aan Spanje.</p>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img src="hart voor dieren .png" alt="Hart voor Dieren website" class="project-img">
+      <div class="project-content">
+        <span class="project-tag tag-mint">In ontwikkeling</span>
+        <h3>Project — hart voor dieren</h3>
+        <p>Een website in ontwikkeling voor een goede vriend. Binnenkort meer hierover te lezen en zien als deze klaar is.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-title">
+    <div class="section-tag">Vaardigheden</div>
+    <h2>Mijn skills</h2>
+    <p>Waar ik dagelijks mee werk en mezelf verder in ontwikkel.</p>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-emoji">💻</div>
+      <h3>Frontend</h3>
+      <p>HTML, CSS & JavaScript</p>
+    </div>
+    <div class="skill-card">
+      <div class="skill-emoji">🎨</div>
+      <h3>Adobe XD</h3>
+      <p>Design en wireframes</p>
+    </div>
+    <div class="skill-card">
+      <div class="skill-emoji">📸</div>
+      <h3>Fotografie</h3>
+      <p>Product & natuur</p>
+    </div>
+    <div class="skill-card">
+      <div class="skill-emoji">📅</div>
+      <h3>Organiseren</h3>
+      <p>Notion & Google Agenda</p>
+    </div>
+    <div class="skill-card">
+      <div class="skill-emoji">🤝</div>
+      <h3>Samenwerken</h3>
+      <p>Ideeën combineren</p>
+    </div>
+    <div class="skill-card">
+      <div class="skill-emoji">🌱</div>
+      <h3>Groeimindset</h3>
+      <p>Altijd blijven leren</p>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-title">
+    <div class="section-tag">Over mij</div>
+    <h2>Mijn verhaal</h2>
+    <p>Meer over mijn achtergrond en visie.</p>
+  </div>
+  <div class="about-wrapper">
+    <div class="about-photo">
+      <img src="Natasja-6 Klein.jpeg" alt="Natasja">
+    </div>
+    <div class="about-content">
+      <div class="about-card">
+        <h3>Wie ben ik?</h3>
+        <p>Van jongs af aan heb ik geleerd uitdagingen met doorzettingsvermogen en vastberadenheid aan te pakken. Deze instelling heeft me gebracht waar ik nu sta: aan het begin van een carrière waarin ik mijn passie voor leren, creëren en ontwikkelen volledig kan benutten.</p>
+        <p style="margin-top:0.8rem;">Naast mijn werk en studie houd ik van reizen, tijd doorbrengen met vrienden en nieuwe ervaringen opdoen.</p>
+        <div class="stat-row">
+          <div class="stat">
+            <div class="stat-num">7+</div>
+            <div class="stat-label">Projecten afgerond</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">31</div>
+            <div class="stat-label">Jaar oud</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Diensten</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-card">
+        <h3>Mijn visie</h3>
+        <p>Dit portfolio laat niet alleen zien wat ik nu kan, maar vooral ook mijn enthousiasme voor wat nog komt. Elke nieuwe uitdaging zie ik als een kans om mezelf verder te ontwikkelen.</p>
+        <p style="margin-top:0.8rem;">Bedankt voor het bezoeken van mijn portfolio. Dit is pas het begin, en ik kijk ernaar uit om mijn groei en prestaties hier met trots te blijven delen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-wrapper">
+    <div class="section-tag" style="margin-bottom:1rem;">Contact</div>
+    <h3>Laten we kennismaken!</h3>
+    <p>Heb je een project in gedachten of wil je gewoon hallo zeggen? Ik hoor graag van je.</p>
+    <div class="contact-links">
+      <a href="mailto:worknatasja@hotmail.com" class="contact-link">
+        ✉️ worknatasja@hotmail.com
+      </a>
+      <a href="https://www.linkedin.com/in/natasja-schut-a94ab51a2/" target="_blank" class="contact-link">
+        💼 LinkedIn profiel
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 Natasja Schut &nbsp;·&nbsp; Gemaakt met <span>♥</span>
+</footer>
+
+<script>
+const darkBtn = document.getElementById('darkBtn');
+darkBtn.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  darkBtn.textContent = document.body.classList.contains('dark') ? '☀️ Light' : '🌙 Dark';
+});
+</script>
+</body>
+</html>
